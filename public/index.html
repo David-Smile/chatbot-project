@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hybrid AI Chatbot</title>
+  <!-- Brain.js CDN for browser neural network (latest 2.x version) -->
+  <script src="https://cdn.jsdelivr.net/npm/brain.js/dist/brain-browser.min.js"></script>
+  <link rel="stylesheet" href="style.css"><!-- Optional: for custom styles -->
+  <!--
+    This project demonstrates a hybrid chatbot using Brain.js (local neural net)
+    and OpenAI GPT (cloud AI) with a simple web UI.
+  -->
+</head>
+<body>
+  <div id="chat-container">
+    <div id="chat-log"><!-- Chat messages will appear here --></div>
+    <form id="chat-form">
+      <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off" required />
+      <button type="submit">Send</button>
+    </form>
+  </div>
+  <!-- Load main script after Brain.js -->
+  <script src="script.js"></script>
+</body>
+</html>

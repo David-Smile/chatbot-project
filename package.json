@@ -1,0 +1,28 @@
+{
+  "name": "chatbot-project",
+  "version": "1.0.0",
+  "description": "This is a simple AI-powered chatbot built with **Node.js** that combines local pattern matching using **Brain.js** and intelligent language responses using the **OpenAI GPT API**.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/David-Smile/chatbot-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/David-Smile/chatbot-project/issues"
+  },
+  "homepage": "https://github.com/David-Smile/chatbot-project#readme",
+  "dependencies": {
+    "axios": "^1.10.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.0.1",
+    "express": "^5.1.0",
+    "openai": "^5.8.2"
+  }
+}
