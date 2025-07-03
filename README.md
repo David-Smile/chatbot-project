@@ -1,31 +1,41 @@
-# 🤖 Hybrid AI Chatbot
+# 🤖 Cloud AI Chatbot
 
-This is a simple AI-powered chatbot built with **Node.js** that combines local pattern matching using **Brain.js** and intelligent language responses using the **OpenAI GPT API**.
+This is a simple AI-powered chatbot built with **Node.js** and **Express.js** that uses cloud-based large language models (LLMs) for intelligent responses.
 
 ### 🔧 Features
-- 🚀 Dual-engine chatbot (Brain.js + OpenAI GPT)
-- 🧠 Handles known user inputs offline using a trained neural network
-- 🌐 Falls back to GPT-3.5 Turbo for intelligent, natural language responses
+- 🚀 Cloud-only chatbot (no offline/local AI)
+- 🌐 Uses DeepSeek and OpenRouter APIs for natural language responses
 - 📡 Built with Express and deployed on the web
 
 ### 📚 Technologies Used
 - JavaScript (Node.js)
 - Express.js
-- Brain.js (Recurrent Neural Network)
-- OpenAI API (GPT-3.5)
+- DeepSeek API (LLM)
+- OpenRouter API (LLM fallback)
 - HTML + CSS for frontend UI
 
 ---
 
 ### 🎯 Goal
 
-To explore hybrid chatbot design—balancing **offline logic** and **cloud-powered intelligence**, while learning core AI and backend integration.
+To explore cloud-based chatbot design—leveraging modern LLM APIs for intelligent conversation, while learning core backend integration and API usage.
 
 ### 📦 How to Run Locally
 1. Clone the repo
 2. `npm install`
-3. Create `.env` with your OpenAI API key
+3. Create `.env` with your DeepSeek and OpenRouter API keys:
+   ```
+   DEEPSEEK_API_KEY=your-deepseek-api-key
+   OPENROUTER_API_KEY=your-openrouter-api-key
+   ```
 4. `node server.js`  
 5. Visit `http://localhost:3000` in your browser
+
+---
+
+### 📝 Notes
+- All AI responses are generated via cloud APIs (no local neural network).
+- If DeepSeek is unavailable or out of balance, OpenRouter is used as a fallback.
+- You can easily add more LLM providers as needed.
 
 ---
