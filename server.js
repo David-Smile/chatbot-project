@@ -19,6 +19,29 @@ app.use(express.static(path.join(__dirname, 'public'))); // Serve static files
 console.log('DeepSeek API Key:', process.env.DEEPSEEK_API_KEY ? process.env.DEEPSEEK_API_KEY.slice(0, 4) + '...' + process.env.DEEPSEEK_API_KEY.slice(-4) : 'NOT SET');
 console.log('OpenRouter API Key:', process.env.OPENROUTER_API_KEY ? process.env.OPENROUTER_API_KEY.slice(0, 4) + '...' + process.env.OPENROUTER_API_KEY.slice(-4) : 'NOT SET');
 
+// In-memory chat history for short-term memory
+const chatHistory = [];
+const MAX_HISTORY = 5;
+let botName = 'Assistant'; // Default bot name
+
+// Helper: Detect if user gives a name to the bot
+function detectBotName(userMessage) {
+  // Patterns: "I would like to call you X", "Your name is X", "I'll call you X", "I want to call you X"
+  const namePatterns = [
+    /call you ([A-Za-z0-9_\- ]{2,30})/i,
+    /your name is ([A-Za-z0-9_\- ]{2,30})/i,
+    /I'll call you ([A-Za-z0-9_\- ]{2,30})/i,
+    /I want to call you ([A-Za-z0-9_\- ]{2,30})/i
+  ];
+  for (const pattern of namePatterns) {
+    const match = userMessage.match(pattern);
+    if (match) {
+      return match[1].trim();
+    }
+  }
+  return null;
+}
+
 // Helper: Call DeepSeek API (chat/completions)
 async function askDeepSeek(userMessage) {
   // DeepSeek API endpoint and payload (OpenAI-compatible)
@@ -50,15 +73,22 @@ async function askDeepSeek(userMessage) {
   }
 }
 
-// Helper: Call OpenRouter API (OpenAI-compatible)
+// Helper: Call OpenRouter API (OpenAI-compatible) with memory and name
 async function askOpenRouter(userMessage) {
+  // Check if user is giving a name to the bot
+  const newName = detectBotName(userMessage);
+  if (newName) botName = newName;
+
   const url = 'https://openrouter.ai/api/v1/chat/completions';
+  // Build message history for context
+  const messages = [
+    { role: 'system', content: `You are a helpful, friendly AI assistant. The user has named you ${botName}. Respond as ${botName} in a natural, conversational, and engaging way, as if you were a human chatting with a friend. Use clear language, show empathy, and keep your answers concise and approachable.` },
+    ...chatHistory,
+    { role: 'user', content: userMessage }
+  ];
   const payload = {
-    model: 'mistralai/mistral-7b-instruct', // Known available/free model on OpenRouter
-    messages: [
-      { role: 'system', content: 'You are a helpful chatbot.' },
-      { role: 'user', content: userMessage }
-    ]
+    model: 'mistralai/mistral-7b-instruct',
+    messages
   };
   try {
     const response = await axios.post(url, payload, {
@@ -68,7 +98,12 @@ async function askOpenRouter(userMessage) {
       },
       timeout: 10000 // 10 seconds
     });
-    return response.data.choices?.[0]?.message?.content?.trim();
+    const reply = response.data.choices?.[0]?.message?.content?.trim();
+    // Update chat history (keep last MAX_HISTORY exchanges)
+    chatHistory.push({ role: 'user', content: userMessage });
+    chatHistory.push({ role: 'assistant', content: reply });
+    while (chatHistory.length > MAX_HISTORY * 2) chatHistory.shift();
+    return reply;
   } catch (err) {
     if (err.response?.status === 429) {
       return '__QUOTA_EXCEEDED__';
