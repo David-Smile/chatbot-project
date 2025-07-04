@@ -35,7 +35,8 @@ async function askDeepSeek(userMessage) {
       headers: {
         'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
         'Content-Type': 'application/json'
-      }
+      },
+      timeout: 10000 // 10 seconds
     });
     // DeepSeek returns choices[0].message.content
     return response.data.choices?.[0]?.message?.content?.trim();
@@ -53,7 +54,7 @@ async function askDeepSeek(userMessage) {
 async function askOpenRouter(userMessage) {
   const url = 'https://openrouter.ai/api/v1/chat/completions';
   const payload = {
-    model: 'mistralai/mistral-7b-instruct', // Free/available model on OpenRouter
+    model: 'mistralai/mistral-7b-instruct', // Known available/free model on OpenRouter
     messages: [
       { role: 'system', content: 'You are a helpful chatbot.' },
       { role: 'user', content: userMessage }
@@ -64,7 +65,8 @@ async function askOpenRouter(userMessage) {
       headers: {
         'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
         'Content-Type': 'application/json'
-      }
+      },
+      timeout: 10000 // 10 seconds
     });
     return response.data.choices?.[0]?.message?.content?.trim();
   } catch (err) {

@@ -6,21 +6,40 @@ body {
   margin: 0;
   padding: 0;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 100vh;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+#chat-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#main-heading {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #6366f1;
+  text-align: center;
+  margin-bottom: 28px;
+  margin-top: 0;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 8px rgba(99,102,241,0.08);
 }
 
 #chat-container {
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-  width: 100%;
-  max-width: 400px;
-  min-height: 500px;
+  width: 700px;
+  height: 600px; /* Fixed height */
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  margin-top: 0;
 }
 
 #chat-log {
@@ -40,6 +59,7 @@ body {
   border-radius: 16px 16px 4px 16px;
   max-width: 75%;
   font-weight: 500;
+  position: relative;
 }
 
 #chat-log .bot {
@@ -50,26 +70,82 @@ body {
   border-radius: 16px 16px 16px 4px;
   max-width: 75%;
   font-weight: 500;
+  position: relative;
+}
+
+/* Message content and timestamp styling */
+.message-content {
+  margin-bottom: 4px;
+}
+
+.message-time {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  text-align: right;
+  margin-top: 2px;
+}
+
+/* Error message styling */
+#chat-log .bot.error {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.error-text {
+  margin-bottom: 8px;
+}
+
+.retry-btn {
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.retry-btn:hover {
+  background: #b91c1c;
 }
 
 #chat-form {
-  display: flex;
   border-top: 1px solid #e5e7eb;
   background: #f9fafb;
   padding: 12px 16px;
 }
 
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 #user-input {
-  flex: 1;
+  width: 100%;
   padding: 10px 12px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 1rem;
   outline: none;
   transition: border 0.2s;
+  resize: none;
+  min-height: 40px;
+  max-height: 120px;
+  font-family: inherit;
+  box-sizing: border-box;
 }
+
 #user-input:focus {
   border-color: #6366f1;
+}
+
+.input-controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 button[type="submit"] {
@@ -101,4 +177,102 @@ button[type="submit"]:hover {
   #chat-form {
     padding: 8px 4px;
   }
-} 
+}
+
+/* Chat loading (WhatsApp-style) */
+.bot.loading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f1f5f9;
+  color: #334155;
+  padding: 10px 16px;
+  border-radius: 16px 16px 16px 4px;
+  max-width: 75%;
+  font-weight: 500;
+}
+
+.dot-typing {
+  display: inline-block;
+  height: 8px;
+  width: 32px;
+}
+.dot-typing span {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 2px;
+  background: #6366f1;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: dotTyping 1.2s infinite linear;
+}
+.dot-typing span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.dot-typing span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+@keyframes dotTyping {
+  0% { opacity: 0.6; transform: scale(1); }
+  20% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 0.6; transform: scale(1); }
+}
+
+/* Chat Header */
+#chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.chat-title {
+  font-weight: 600;
+  color: #374151;
+  font-size: 1.1rem;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+  background: #1f2937;
+  color: #f9fafb;
+}
+
+body.dark-mode #main-heading {
+  color: #a78bfa;
+}
+
+body.dark-mode #chat-container {
+  background: #374151;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
+body.dark-mode #chat-header {
+  background: #4b5563;
+  border-bottom-color: #6b7280;
+}
+
+body.dark-mode .chat-title {
+  color: #f9fafb;
+}
+
+body.dark-mode #chat-log .bot {
+  background: #4b5563;
+  color: #f9fafb;
+}
+
+body.dark-mode #chat-form {
+  background: #4b5563;
+  border-top-color: #6b7280;
+}
+
+body.dark-mode #user-input {
+  background: #374151;
+  border-color: #6b7280;
+  color: #f9fafb;
+}
+
+ 

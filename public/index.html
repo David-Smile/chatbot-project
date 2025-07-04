@@ -11,12 +11,23 @@
   -->
 </head>
 <body>
-  <div id="chat-container">
-    <div id="chat-log"><!-- Chat messages will appear here --></div>
-    <form id="chat-form">
-      <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off" required />
-      <button type="submit">Send</button>
-    </form>
+  <div id="chat-wrapper">
+    <div id="main-heading">AI Chatbot</div>
+    <!-- Chat Container -->
+    <div id="chat-container" class="light">
+      <div id="chat-header">
+        <div class="chat-title">Chat</div>
+      </div>
+      <div id="chat-log"><!-- Chat messages will appear here --></div>
+      <form id="chat-form">
+        <div class="input-container">
+          <textarea id="user-input" placeholder="Type your message..." autocomplete="off" required rows="1"></textarea>
+          <div class="input-controls">
+            <button type="submit">Send</button>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
   <script src="script.js"></script>
 </body>
