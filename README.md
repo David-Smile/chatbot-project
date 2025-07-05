@@ -1,4 +1,4 @@
-# 🤖 Cloud AI Chatbot
+# 🤖 Simple Cloud AI Chatbot
 
 This is a simple AI-powered chatbot built with **Node.js** and **Express.js** that uses cloud-based large language models (LLMs) for intelligent responses.
 

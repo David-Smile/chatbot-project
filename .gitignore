@@ -1,3 +1,235 @@
+# ============================================================================
+# .gitignore - Git Ignore Rules for Cloud-Only AI Chatbot
+# ============================================================================
+#
+# This file specifies which files and directories should be ignored
+# by Git version control. This prevents sensitive information,
+# build artifacts, and system files from being committed to the repository.
+#
+# IMPORTANT: This file should be committed to version control
+# to ensure all developers use the same ignore rules.
+#
+# @author Your Name
+# @version 2.0.0
+# @since 2024
+# ============================================================================
+
+# ============================================================================
+# DEPENDENCIES AND PACKAGE MANAGEMENT
+# ============================================================================
+
+# Node.js dependencies
+# Contains all installed npm packages and their dependencies
+# This directory is large and should be installed locally by each developer
 node_modules/
+
+# npm package lock file (optional - some teams prefer to commit this)
+# package-lock.json
+
+# Yarn lock file (if using Yarn instead of npm)
+# yarn.lock
+
+# ============================================================================
+# ENVIRONMENT AND CONFIGURATION
+# ============================================================================
+
+# Environment variables file
+# Contains sensitive information like API keys, database credentials, etc.
+# This file should NEVER be committed to version control
 .env
+
+# Environment variables example file (safe to commit)
+# .env.example
+
+# Local environment overrides
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ============================================================================
+# OPERATING SYSTEM FILES
+# ============================================================================
+
+# macOS system files
+# Files created by macOS Finder and system processes
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows system files
+# Files created by Windows Explorer and system processes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux system files
+# Files created by Linux file managers and system processes
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# ============================================================================
+# DEVELOPMENT AND BUILD FILES
+# ============================================================================
+
+# Log files
+# Application logs, error logs, and debug output
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+# Temporary files created during application execution
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+# Test coverage reports and data
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# ============================================================================
+# IDE AND EDITOR FILES
+# ============================================================================
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# WebStorm/IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ============================================================================
+# TEMPORARY AND CACHE FILES
+# ============================================================================
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# Cache directories
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+dist/
+build/
+
+# ============================================================================
+# SECURITY AND SENSITIVE FILES
+# ============================================================================
+
+# API keys and credentials
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# ============================================================================
+# PROJECT-SPECIFIC FILES
+# ============================================================================
+
+# Chat history and user data (if implemented)
+# data/
+# users/
+# sessions/
+
+# Uploaded files (if file upload feature is added)
+# uploads/
+# public/uploads/
+
+# Generated documentation
+# docs/build/
+# docs/dist/
+
+# ============================================================================
+# DEPLOYMENT AND HOSTING
+# ============================================================================
+
+# Deployment configuration files
+# .deploy/
+# .vercel/
+# .netlify/
+
+# Serverless function builds
+# .serverless/
+# .aws-sam/
+
+# ============================================================================
+# TESTING AND QUALITY ASSURANCE
+# ============================================================================
+
+# Test output and reports
+test-results/
+playwright-report/
+test-results.xml
+
+# Performance testing
+.lighthouseci/
+
+# ============================================================================
+# NOTES AND BEST PRACTICES
+# ============================================================================
+#
+# Best Practices for .gitignore:
+# 1. Always commit this file to version control
+# 2. Be specific about what you ignore
+# 3. Use comments to explain why files are ignored
+# 4. Test your ignore rules with 'git status'
+# 5. Consider using .gitignore templates for your language/framework
+#
+# Common Mistakes to Avoid:
+# - Ignoring files that should be tracked (like configuration templates)
+# - Not ignoring sensitive files (like .env)
+# - Ignoring build artifacts that should be generated locally
+# - Forgetting to ignore IDE-specific files
+#
+# ============================================================================

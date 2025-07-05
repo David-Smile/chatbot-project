@@ -17,17 +17,17 @@ function formatTime(date) {
 
 // Helper: Format bot text with paragraphs and lists
 function formatBotText(text) {
-  // Convert numbered lists (1. ... 2. ...) to <ol><li>...</li></ol>
+  // Convert numbered lists (1. ... 2. ...) to <ul><li>...</li></ul> (bullet points)
   text = text.replace(/(\d+\. .+?)(?=(?:\n\d+\.|$))/gs, function(match) {
     const items = match.split(/\n(?=\d+\.)/).map(item => item.replace(/^\d+\.\s*/, ''));
-    return '<ol>' + items.map(i => `<li>${i.trim()}</li>`).join('') + '</ol>';
+    return '<ul>' + items.map(i => `<li>${i.trim()}</li>`).join('') + '</ul>';
   });
   // Convert double newlines to paragraphs
   text = text.replace(/\n\n+/g, '</p><p>');
   // Convert single newlines to <br>
   text = text.replace(/(?<!<\/p>)\n/g, '<br>');
   // Wrap in <p> if not already a list
-  if (!/^<ol>/.test(text)) text = `<p>${text}</p>`;
+  if (!/^<ul>/.test(text)) text = `<p>${text}</p>`;
   return text;
 }
 
@@ -214,7 +214,9 @@ function addIntroMessage() {
   const chatLog = document.getElementById('chat-log');
   const introMsg = document.createElement('div');
   introMsg.className = 'bot';
-  introMsg.innerHTML = `<div class="message-content">👋 Hi! I'm your AI assistant. How can I help you today?</div><div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
+  // Always use the current time for the intro message
+  const now = new Date();
+  introMsg.innerHTML = `<div class="message-content">👋 Hi! I'm your AI assistant. How can I help you today?</div><div class="message-time">${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
   chatLog.appendChild(introMsg);
 }
 

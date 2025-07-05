@@ -1,34 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- ============================================================================
+       HTML HEAD SECTION - METADATA AND RESOURCES
+       ============================================================================ -->
+  
   <meta charset="UTF-8">
+  <!-- Viewport meta tag for responsive design - ensures proper scaling on mobile devices -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hybrid AI Chatbot</title>
-  <link rel="stylesheet" href="style.css"><!-- Optional: for custom styles -->
+  
+  <!-- Page title displayed in browser tab -->
+  <title>AI Chatbot - Cloud-Powered Conversational Assistant</title>
+  
+  <!-- External CSS file for styling -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- ============================================================================
+       PROJECT DESCRIPTION AND NOTES
+       ============================================================================ -->
+  
   <!--
-    This project demonstrates a hybrid chatbot using Brain.js (local neural net)
-    and OpenAI GPT (cloud AI) with a simple web UI.
+    AI Chatbot - Cloud-Only Implementation
+    
+    This project demonstrates a modern chatbot interface using cloud-based AI services
+    (DeepSeek and OpenRouter) with a responsive web UI built with vanilla JavaScript.
+    
+    Key Features:
+    - Real-time chat interface with typing animations
+    - Dual AI service integration with automatic fallback
+    - Responsive design for all device sizes
+    - Dark mode support
+    - Error handling with retry functionality
+    - Message timestamps and formatting
+    - Auto-resizing text input
+    
+    Architecture:
+    - Frontend: HTML5, CSS3, Vanilla JavaScript (ES6+)
+    - Backend: Node.js with Express.js
+    - AI Services: DeepSeek API (primary), OpenRouter API (fallback)
+    - Communication: RESTful API with JSON
+    
+    File Structure:
+    - index.html: Main HTML structure and layout
+    - style.css: Responsive styling and animations
+    - script.js: Frontend logic and API communication
+    - server.js: Backend API and AI service integration
+    
+    @author Your Name
+    @version 2.0.0
+    @since 2024
   -->
 </head>
+
 <body>
+  <!-- ============================================================================
+       MAIN APPLICATION CONTAINER
+       ============================================================================ -->
+  
+  <!-- 
+    Chat wrapper - Main container for the entire chat application
+    Uses flexbox for centering and responsive layout
+  -->
   <div id="chat-wrapper">
+    
+    <!-- 
+      Main heading - Application title and branding
+      Styled with modern typography and color scheme
+    -->
     <div id="main-heading">AI Chatbot</div>
-    <!-- Chat Container -->
+    
+    <!-- ============================================================================
+         CHAT INTERFACE CONTAINER
+         ============================================================================ -->
+    
+    <!-- 
+      Chat container - Main chat interface with header, messages, and input
+      Features:
+      - Fixed height for consistent layout
+      - Rounded corners and shadow for modern appearance
+      - Flexbox layout for proper content distribution
+      - Overflow handling for scrollable message area
+    -->
     <div id="chat-container" class="light">
+      
+      <!-- 
+        Chat header - Contains chat title and potential future controls
+        Provides visual separation between header and message area
+      -->
       <div id="chat-header">
         <div class="chat-title">Chat</div>
+        <!-- 
+          Future enhancement: Could include settings, user info, or other controls
+          Example: <button class="settings-btn">⚙️</button>
+        -->
       </div>
-      <div id="chat-log"><!-- Chat messages will appear here --></div>
+      
+      <!-- 
+        Chat log - Scrollable container for all chat messages
+        Features:
+        - Flexbox layout for message positioning
+        - Auto-scroll to bottom for new messages
+        - Gap spacing between messages
+        - Overflow handling for long conversations
+      -->
+      <div id="chat-log">
+        <!-- 
+          Dynamic content - Messages are inserted here by JavaScript
+          Structure for each message:
+          <div class="user|bot">
+            <div class="message-content">Message text</div>
+            <div class="message-time">Timestamp</div>
+          </div>
+        -->
+      </div>
+      
+      <!-- ============================================================================
+           MESSAGE INPUT SECTION
+           ============================================================================ -->
+      
+      <!-- 
+        Chat form - Input area for user messages
+        Features:
+        - Form validation and submission handling
+        - Auto-resizing textarea
+        - Keyboard shortcuts (Enter to send, Shift+Enter for new line)
+        - Submit button with loading states
+      -->
       <form id="chat-form">
+        
+        <!-- 
+          Input container - Wrapper for input field and controls
+          Uses flexbox for layout and spacing
+        -->
         <div class="input-container">
-          <textarea id="user-input" placeholder="Type your message..." autocomplete="off" required rows="1"></textarea>
+          
+          <!-- 
+            User input textarea - Main input field for user messages
+            Features:
+            - Auto-resizing based on content
+            - Placeholder text for user guidance
+            - Form validation (required field)
+            - Keyboard event handling
+            - Maximum height with scroll for long messages
+          -->
+          <textarea 
+            id="user-input" 
+            placeholder="Type your message..." 
+            autocomplete="off" 
+            required 
+            rows="1"
+            aria-label="Type your message to the AI assistant"
+          ></textarea>
+          
+          <!-- 
+            Input controls - Container for action buttons
+            Currently contains only the send button, but could be expanded
+            for additional features like file upload, voice input, etc.
+          -->
           <div class="input-controls">
-            <button type="submit">Send</button>
+            
+            <!-- 
+              Send button - Submits the user message
+              Features:
+              - Disabled state during processing
+              - Loading text ("Sending...")
+              - Hover effects and transitions
+              - Accessible button styling
+            -->
+            <button type="submit" aria-label="Send message">
+              Send
+            </button>
+            
+            <!-- 
+              Future enhancement: Additional input controls
+              Examples:
+              - Voice input button
+              - File upload button
+              - Emoji picker
+              - Settings toggle
+            -->
           </div>
         </div>
       </form>
     </div>
   </div>
+  
+  <!-- ============================================================================
+       JAVASCRIPT INTEGRATION
+       ============================================================================ -->
+  
+  <!-- 
+    Main JavaScript file - Contains all frontend logic
+    Loaded at the end of body for optimal page loading performance
+    Features:
+    - DOM manipulation and event handling
+    - API communication with backend
+    - Message formatting and display
+    - Error handling and retry logic
+    - Responsive behavior and animations
+  -->
   <script src="script.js"></script>
+  
+  <!-- ============================================================================
+       ACCESSIBILITY AND SEO NOTES
+       ============================================================================ -->
+  
+  <!--
+    Accessibility Features:
+    - Semantic HTML structure
+    - ARIA labels for screen readers
+    - Keyboard navigation support
+    - Focus management
+    - Color contrast compliance
+    
+    SEO Considerations:
+    - Proper meta tags
+    - Semantic HTML elements
+    - Descriptive page title
+    - Clean URL structure
+    
+    Performance Optimizations:
+    - Minimal external dependencies
+    - Efficient CSS and JavaScript
+    - Optimized asset loading
+    - Responsive image handling
+  -->
 </body>
 </html>
