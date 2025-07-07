@@ -1,48 +1,21 @@
-/**
- * server.js - Backend Server for Cloud-Only AI Chatbot
- * 
- * This server provides a REST API for the chatbot frontend, handling communication
- * with OpenRouter AI service for LLM responses.
- * 
- * Features:
- * - OpenRouter AI service integration
- * - Short-term memory for conversational context
- * - Bot name detection and personalization
- * - Error handling and quota management
- * - Static file serving for the frontend
- * 
- * @author Your Name
- * @version 2.0.0
- * @since 2024
- */
+// server.js - Backend for AI Chatbot with OpenRouter
 
-// ============================================================================
-// DEPENDENCIES AND CONFIGURATION
-// ============================================================================
+// Dependencies
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+const axios = require('axios');
 
-require('dotenv').config(); // Load environment variables from .env file
-const express = require('express'); // Web framework for Node.js
-const cors = require('cors'); // Cross-Origin Resource Sharing middleware
-const path = require('path'); // Path utilities for file operations
-const axios = require('axios'); // HTTP client for API requests
-
-// Initialize Express application
 const app = express();
-const PORT = process.env.PORT || 3000; // Use environment PORT or default to 3000
+const PORT = process.env.PORT || 3000;
 
-// ============================================================================
-// MIDDLEWARE SETUP
-// ============================================================================
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cors()); // Enable CORS for cross-origin requests (important for development)
-app.use(express.json()); // Parse incoming JSON request bodies
-app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from public directory
-
-// ============================================================================
-// DEBUGGING AND LOGGING
-// ============================================================================
-
-// Log API key status (showing first 4 and last 4 characters for security)
+// Log API key status
 console.log('OpenRouter API Key:', process.env.OPENROUTER_API_KEY ? 
   process.env.OPENROUTER_API_KEY.slice(0, 4) + '...' + process.env.OPENROUTER_API_KEY.slice(-4) : 'NOT SET');
 
@@ -51,34 +24,12 @@ if (process.env.OPENROUTER_API_KEY && !process.env.OPENROUTER_API_KEY.startsWith
   console.warn('⚠️  Warning: OpenRouter API key format may be incorrect. Should start with "sk-or-v1-"');
 }
 
-// ============================================================================
-// MEMORY AND STATE MANAGEMENT
-// ============================================================================
-
-// In-memory chat history for short-term memory (persists during server session)
+// Chat memory
 const chatHistory = [];
-const MAX_HISTORY = 5; // Maximum number of conversation exchanges to remember
-let botName = 'Assistant'; // Default bot name, can be changed by user
+const MAX_HISTORY = 5;
+let botName = 'Assistant';
 
-// ============================================================================
-// UTILITY FUNCTIONS
-// ============================================================================
-
-/**
- * Detects if the user is giving a name to the bot in their message
- * 
- * This function uses regex patterns to identify when a user wants to
- * personalize the bot by giving it a specific name. The patterns cover
- * common ways users might express this intention.
- * 
- * @param {string} userMessage - The user's input message
- * @returns {string|null} - The detected name or null if no name found
- * 
- * @example
- * detectBotName("I would like to call you Alice") // Returns "Alice"
- * detectBotName("Your name is Bob") // Returns "Bob"
- * detectBotName("Hello there") // Returns null
- */
+// Detect bot name from user message
 function detectBotName(userMessage) {
   // Regex patterns to match common name-giving phrases
   const namePatterns = [
@@ -100,116 +51,72 @@ function detectBotName(userMessage) {
 
 
 
-// ============================================================================
-// AI SERVICE INTEGRATION - OPENROUTER (PRIMARY)
-// ============================================================================
-
-/**
- * Sends a message to the OpenRouter AI API with enhanced features
- * 
- * OpenRouter serves as the primary AI service and includes additional
- * features like conversation memory and bot name personalization.
- * 
- * @param {string} userMessage - The user's input message
- * @returns {Promise<string|null>} - AI response or null on error
- * 
- * @throws {Error} - Network errors, API errors, timeout errors
- */
+// OpenRouter AI service
 async function askOpenRouter(userMessage) {
   // Check if user is giving a name to the bot
   const newName = detectBotName(userMessage);
   if (newName) botName = newName; // Update bot name if detected
 
-  // OpenRouter API configuration
   const url = 'https://openrouter.ai/api/v1/chat/completions';
   
-  // Build comprehensive message history for context
   const messages = [
-    // Enhanced system prompt with bot name and personality
     { 
       role: 'system', 
       content: `You are a helpful, friendly AI assistant. The user has named you ${botName}. Respond as ${botName} in a natural, conversational, and engaging way, as if you were a human chatting with a friend. Use clear language, show empathy, and keep your answers concise and approachable.` 
     },
-    ...chatHistory, // Include conversation history for context
-    { role: 'user', content: userMessage } // Current user message
+    ...chatHistory,
+    { role: 'user', content: userMessage }
   ];
   
   const payload = {
-    model: 'anthropic/claude-3-haiku', // Claude 3 Haiku model via OpenRouter
+    model: 'anthropic/claude-3-haiku',
     messages
   };
   
   try {
-    // Make API request
     const response = await axios.post(url, payload, {
       headers: {
         'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
         'Content-Type': 'application/json'
       },
-      timeout: 10000 // 10 second timeout
+      timeout: 10000
     });
     
     const reply = response.data.choices?.[0]?.message?.content?.trim();
     
-    // Update conversation history for future context
+    // Update chat history
     chatHistory.push({ role: 'user', content: userMessage });
     chatHistory.push({ role: 'assistant', content: reply });
     
-    // Maintain history size limit (remove oldest messages if exceeded)
+    // Keep history size limited
     while (chatHistory.length > MAX_HISTORY * 2) {
-      chatHistory.shift(); // Remove oldest message pair
+      chatHistory.shift();
     }
     
     return reply;
     
   } catch (err) {
-    console.log('OpenRouter API error occurred:');
-    console.log('Error status:', err.response?.status);
-    console.log('Error data:', err.response?.data);
-    console.log('Error message:', err.message);
+    console.log('OpenRouter API error:', err.response?.data || err.message);
     
-    // Handle quota exceeded errors
     if (err.response?.status === 429) {
-      console.log('Handling 429 quota exceeded error');
       return '__QUOTA_EXCEEDED__';
     }
     
-    // Handle insufficient balance/credits errors
     if (err.response?.data?.error?.message?.toLowerCase().includes('balance') ||
         err.response?.data?.error?.message?.toLowerCase().includes('credit') ||
         err.response?.data?.error?.message?.toLowerCase().includes('insufficient')) {
-      console.log('OpenRouter API: Balance/credit error - service unavailable');
       return '__QUOTA_EXCEEDED__';
     }
     
-    // Handle 404 model not found errors
     if (err.response?.status === 404) {
-      console.log('OpenRouter API: Model not found (404) - check model name');
       return null;
     }
     
-    // Log other errors
-    console.error('OpenRouter API error:', err.response?.data || err.message);
     return null;
   }
 }
 
-// ============================================================================
-// API ENDPOINTS
-// ============================================================================
-
-/**
- * POST /message - Main chat endpoint
- * 
- * Handles incoming chat messages from the frontend, processes them through
- * the OpenRouter AI service, and returns the response.
- * 
- * Request body: { message: string }
- * Response: { reply: string } or { error: string }
- * 
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- */
+// API endpoints
 app.post('/message', async (req, res) => {
   try {
     const userMessage = req.body.message;
@@ -253,54 +160,8 @@ app.post('/message', async (req, res) => {
   }
 });
 
-// ============================================================================
-// SERVER INITIALIZATION
-// ============================================================================
-
-/**
- * Start the Express server
- * 
- * The server will listen on the specified port and log the URL
- * where the application can be accessed.
- */
+// Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📁 Serving static files from: ${path.join(__dirname, 'public')}`);
-  console.log(`🧠 AI Service: OpenRouter`);
+  console.log(`📝 OpenRouter API Key: ${process.env.OPENROUTER_API_KEY ? '✅ Set' : '❌ Missing'}`);
 });
-
-// ============================================================================
-// NOTES FOR FUTURE ENHANCEMENTS
-// ============================================================================
-
-/*
- * Potential improvements and additional features:
- * 
- * 1. Database Integration:
- *    - Store chat history persistently
- *    - User authentication and session management
- *    - Conversation analytics
- * 
- * 2. Additional AI Services:
- *    - Add more fallback options (Anthropic Claude, Google Gemini, etc.)
- *    - Service health monitoring and automatic failover
- *    - Load balancing between multiple services
- * 
- * 3. Enhanced Features:
- *    - File upload and processing
- *    - Voice input/output
- *    - Multi-language support
- *    - Conversation export
- * 
- * 4. Security Enhancements:
- *    - Rate limiting per user/IP
- *    - Input sanitization and validation
- *    - API key rotation
- *    - Request logging and monitoring
- * 
- * 5. Performance Optimizations:
- *    - Response caching
- *    - Connection pooling
- *    - Compression middleware
- *    - CDN integration
- */

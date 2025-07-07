@@ -1,5 +1,4 @@
-// script.js - Frontend logic for Hybrid AI Chatbot (cloud-only)
-// This script handles the chat UI and backend API calls. Brain.js (offline) logic has been removed.
+// script.js - Frontend logic for AI Chatbot
 
 // DOM elements
 const chatLog = document.getElementById('chat-log');

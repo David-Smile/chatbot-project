@@ -1,7 +1,7 @@
 {
   "name": "chatbot-project",
   "version": "2.0.0",
-  "description": "A modern cloud-only AI chatbot using Node.js, Express, and OpenRouter for LLM responses with responsive web UI.",
+  "description": "AI chatbot with Node.js, Express, and OpenRouter API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -17,17 +17,9 @@
   "keywords": [
     "chatbot",
     "ai",
-    "llm",
-    "cloud",
     "express",
     "nodejs",
-    "openrouter",
-    "responsive",
-    "real-time",
-    "api",
-    "javascript",
-    "html5",
-    "css3"
+    "openrouter"
   ],
   "author": "Your Name <your.email@example.com>",
   "license": "ISC",
